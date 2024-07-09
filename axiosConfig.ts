@@ -9,7 +9,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // Retrieve the token from localStorage, or wherever you store it
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem('jwt');
 
     if (token) {
       // Add the token to the headers
@@ -19,6 +19,22 @@ axiosInstance.interceptors.request.use(
   },
   (error) => {
     // Do something with request error
+    return Promise.reject(error);
+  }
+);
+
+axiosInstance.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response && error.response.status === 401) {
+      localStorage.clear();
+
+      const path = window.location.pathname;
+
+      if (path !== '/login' && path !== '/signup') {
+        window.location.href = '/login';
+      }
+    }
     return Promise.reject(error);
   }
 );

@@ -11,3 +11,34 @@ body {
 * {
   box-sizing: border-box;
 }
+
+.graph-container{
+  height: 100%;
+  width: 100%;
+}
+
+.user-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 10px;
+  border: solid 1.5px;
+
+  @media screen and (max-width: 580) {
+    width: 26px;
+    height: 26px;
+  }
+}
+
+.user-avatar-btn{
+  border: none;
+  outline: none;
+  background: none;
+}
+
+.user-avatar-btn:hover, .user-avatar-btn:focus, .user-avatar-btn:active {
+  border: none;
+  outline: none;
+  background: none;
+}

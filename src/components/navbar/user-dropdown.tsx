@@ -6,29 +6,49 @@ import {
   DropdownTrigger,
   NavbarItem,
 } from "@nextui-org/react";
-import React, { useCallback } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { DarkModeSwitch } from "./darkmodeswitch";
 import { useRouter } from "next/navigation";
-// import { deleteAuthCookie } from "@/actions/auth.action";
+import { signOut } from '@/redux/slices/auth-reducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/redux/store'
+import { generatePlaceholderImage } from "@/utils/imageUtils";
 
 export const UserDropdown = () => {
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const [userDetails, setUserDetails] = useState({ name: '', email: '' });
+
+  useEffect(() => {
+    setUserDetails({
+      name: localStorage.getItem('name') || '',
+      email: localStorage.getItem('email') || ''
+    });
+  }, []);
 
   const handleLogout = useCallback(async () => {
-    // await deleteAuthCookie();
+    await dispatch(signOut());
     router.replace("/login");
   }, [router]);
+
+  console.log(generatePlaceholderImage(userDetails.name))
 
   return (
     <Dropdown>
       <NavbarItem>
         <DropdownTrigger>
-          <Avatar
+          {/* <Avatar
             as='button'
             color='secondary'
             size='md'
-            src='https://i.pravatar.cc/150?u=a042581f4e29026704d'
-          />
+            src={generatePlaceholderImage(userDetails.name)}
+          /> */}
+          <button className="user-avatar-btn">
+          <div className="user-avatar">
+             <img src={generatePlaceholderImage(userDetails.name)} alt="" />
+             </div>
+          </button>
         </DropdownTrigger>
       </NavbarItem>
       <DropdownMenu
@@ -37,15 +57,9 @@ export const UserDropdown = () => {
         <DropdownItem
           key='profile'
           className='flex flex-col justify-start w-full items-start'>
-          <p>Signed in as</p>
-          <p>zoey@example.com</p>
+          <p>{userDetails.name}</p>
+          <p>{userDetails.email}</p>
         </DropdownItem>
-        <DropdownItem key='settings'>My Settings</DropdownItem>
-        <DropdownItem key='team_settings'>Team Settings</DropdownItem>
-        <DropdownItem key='analytics'>Analytics</DropdownItem>
-        <DropdownItem key='system'>System</DropdownItem>
-        <DropdownItem key='configurations'>Configurations</DropdownItem>
-        <DropdownItem key='help_and_feedback'>Help & Feedback</DropdownItem>
         <DropdownItem
           key='logout'
           color='danger'

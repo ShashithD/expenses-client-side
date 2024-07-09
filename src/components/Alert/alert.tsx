@@ -34,7 +34,7 @@ const Alert = ({ type, message, onClose }: AlertProps) => {
 
   return (
     <div
-      className={`flex w-full items-center p-4 mb-4 rounded-lg ${backgroundColor} dark:bg-gray-800 ${textColor} dark:${textColor}`}
+      className={`flex w-full items-center p-4 mb-4 rounded-lg ${backgroundColor} light:bg-gray-800 ${textColor} dark:${textColor}`}
       role="alert"
     >
       <svg
@@ -49,7 +49,7 @@ const Alert = ({ type, message, onClose }: AlertProps) => {
       <div className="ml-3 text-sm font-medium">{message}</div>
       <button
         type="button"
-        className={`ms-auto -mx-1.5 -my-1.5 rounded-lg focus:ring-2 ${buttonColor} ${hoverBgColor} p-1.5 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:${textColor} dark:hover:bg-gray-700`}
+        className={`ms-auto -mx-1.5 -my-1.5 rounded-lg focus:ring-2 ${buttonColor} ${hoverBgColor} p-1.5 inline-flex items-center justify-center h-8 w-8 light:bg-gray-800 dark:${textColor} dark:hover:bg-gray-700`}
         aria-label="Close"
         onClick={onClose}
       >

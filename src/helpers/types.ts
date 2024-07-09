@@ -10,12 +10,27 @@ export type RegisterFormType = {
   confirmPassword: string;
 };
 
-export type ExpenseType = 'Food' | 'Transport' | 'Utilities' | 'Healthcare';
+export type ExpenseType =
+  | 'Food'
+  | 'Transport'
+  | 'Utilities'
+  | 'Subscriptions'
+  | 'Entertainment'
+  | 'Other';
 
 export type ExpenseFormType = {
   title: string;
   description: string;
   amount: number;
-  date: string | null;
+  date: string;
   type: ExpenseType | null;
 };
+
+export interface Expense {
+  _id: string;
+  title: string;
+  description: string;
+  amount: number;
+  date: string;
+  type: ExpenseType | null;
+}

@@ -1,19 +1,22 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Expences } from '@/components/expences';
+import { Expenses } from '@/components/expenses';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import { getExpenses } from '@/redux/slices/expenses-reducer';
+import WithAuth from '@/app/with-auth';
 
-const expences = () => {
+const ExpensesPage = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     dispatch(getExpenses());
   }, []);
 
-  return <Expences />;
+  console.log('accessToken')
+
+  return <WithAuth><Expenses /></WithAuth>;
 };
 
-export default expences;
+export default ExpensesPage;

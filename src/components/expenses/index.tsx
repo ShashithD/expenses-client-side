@@ -1,34 +1,21 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Input } from '@nextui-org/react';
 import Link from 'next/link';
-import { DotsIcon } from '@/components/icons/expences/dots-icon';
-import { InfoIcon } from '@/components/icons/expences/info-icon';
-import { TrashIcon } from '@/components/icons/expences/trash-icon';
 import { HouseIcon } from '@/components/icons/breadcrumb/house-icon';
 import { PaymentsIcon } from '@/components/icons/breadcrumb/payments-icon';
-import { SettingsIcon } from '@/components/icons/sidebar/settings-icon';
 import { TableWrapper } from '@/components/table/table';
-import { AddExpence } from './add-expence';
+import { AddExpense } from './add-expense';
 import { TableRow, TableCell, Tooltip, Chip } from '@nextui-org/react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { EditIcon } from '../icons/table/edit-icon';
-import { EyeIcon } from '../icons/table/eye-icon';
 import { DeleteIcon } from '../icons/table/delete-icon';
-import { createExpense } from '@/redux/slices/expenses-reducer';
-import { ExpenseFormType } from '@/helpers/types';
+import { createExpense, updateExpense, getExpenses, deleteExpense } from '@/redux/slices/expenses-reducer';
+import { Expense, ExpenseFormType } from '@/helpers/types';
 import Alert from '../Alert/alert';
-
-interface Expense {
-  _id: string;
-  title: string;
-  description: string;
-  amount: number;
-  date: string;
-  type: string;
-}
+import { UpdateExpense } from './update-expense ';
+import { formatDate } from "@/utils/utils";
 
 export const columns = [
   { name: 'Title', uid: 'title' },
@@ -39,8 +26,10 @@ export const columns = [
   { name: 'ACTIONS', uid: 'actions' },
 ];
 
-export const Expences = () => {
+export const Expenses = () => {
   const [showAlert, setShowAlert] = useState(false);
+  const [currentExpense, setCurrentExpense] = useState<Expense | null>(null);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
 
   const { expenses, createPending, alert } = useSelector(
     (state: RootState) => state?.expenses
@@ -48,15 +37,35 @@ export const Expences = () => {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const handleSaveExpense = (expense: ExpenseFormType) => {
-    dispatch(createExpense(expense));
+  const handleSaveExpense = async (expense: ExpenseFormType) => {
+    await dispatch(createExpense(expense));
+
+    dispatch(getExpenses())
+  };
+
+  const handleClickEditExpense = (expense: Expense) => {
+    setCurrentExpense(expense);
+    setShowUpdateModal(true);
+  };
+
+  const handleEditExpense = async (expense: Expense) => {
+    await dispatch(updateExpense(expense));
+
+    dispatch(getExpenses())
+  };
+
+  const handleDeleteExpense = async (id: string) => {
+    console.log(id)
+    await dispatch(deleteExpense(id));
+
+    dispatch(getExpenses())
   };
 
   useEffect(() => {
     setShowAlert(alert.show);
   }, [alert]);
 
-  const handleClose = () => {
+  const handleCloseAlert = () => {
     setShowAlert(false);
   };
 
@@ -67,28 +76,17 @@ export const Expences = () => {
           <TableCell>{expense.title}</TableCell>
           <TableCell>{expense.description}</TableCell>
           <TableCell>{expense.amount}</TableCell>
-          <TableCell>{expense.date}</TableCell>
+          <TableCell>{formatDate(expense.date)}</TableCell>
           <TableCell>
-            <Chip size="sm" variant="flat" color={'success'}>
+            <Chip size="sm" variant="flat" color={'default'}>
               <span className="capitalize text-xs">{expense.type}</span>
             </Chip>
           </TableCell>
           <TableCell>
             <div className="flex items-center gap-4 ">
               <div>
-                <Tooltip content="Details">
-                  <button
-                    onClick={() => console.log('View expense', expense._id)}
-                  >
-                    <EyeIcon size={20} fill="#979797" />
-                  </button>
-                </Tooltip>
-              </div>
-              <div>
                 <Tooltip content="Edit user" color="secondary">
-                  <button
-                    onClick={() => console.log('Edit expense', expense._id)}
-                  >
+                  <button onClick={() => handleClickEditExpense(expense)}>
                     <EditIcon size={20} fill="#979797" />
                   </button>
                 </Tooltip>
@@ -97,9 +95,8 @@ export const Expences = () => {
                 <Tooltip
                   content="Delete user"
                   color="danger"
-                  onClick={() => console.log('Delete expense', expense._id)}
                 >
-                  <button>
+                  <button onClick={() => handleDeleteExpense(expense._id)}>
                     <DeleteIcon size={20} fill="#FF0080" />
                   </button>
                 </Tooltip>
@@ -124,7 +121,7 @@ export const Expences = () => {
 
         <li className="flex gap-2">
           <PaymentsIcon />
-          <span>Expences</span>
+          <span>Expenses</span>
           <span> / </span>{' '}
         </li>
         <li className="flex gap-2">
@@ -132,23 +129,12 @@ export const Expences = () => {
         </li>
       </ul>
 
-      <h3 className="text-xl font-semibold">All Expences</h3>
+      <h3 className="text-xl font-semibold">All Expenses</h3>
       <div className="flex justify-between flex-wrap gap-4 items-center">
         <div className="flex items-center gap-3 flex-wrap md:flex-nowrap">
-          <Input
-            classNames={{
-              input: 'w-full',
-              mainWrapper: 'w-full',
-            }}
-            placeholder="Search expences"
-          />
-          <SettingsIcon />
-          <TrashIcon />
-          <InfoIcon />
-          <DotsIcon />
         </div>
         <div className="flex flex-row gap-3.5 flex-wrap">
-          <AddExpence handleSaveExpense={handleSaveExpense} />
+          <AddExpense handleSaveExpense={handleSaveExpense} />
         </div>
       </div>
       <div className="max-w-[95rem] mx-auto w-full">
@@ -156,10 +142,16 @@ export const Expences = () => {
           <Alert
             type={alert.type}
             message={alert.message}
-            onClose={handleClose}
+            onClose={handleCloseAlert}
           />
         )}
         <TableWrapper columns={columns} rows={tableRows()} />
+        <UpdateExpense
+          handleEditExpense={handleEditExpense}
+          expense={currentExpense}
+          isModalOpen={showUpdateModal}
+          setShowUpdateModal={setShowUpdateModal}
+        />
       </div>
     </div>
   );

@@ -41,7 +41,7 @@ interface AddExpenseProps {
   handleSaveExpense: (expense: ExpenseFormType) => void;
 }
 
-export const updateExpence = ({ handleSaveExpense }: AddExpenseProps) => {
+export const AddExpense = ({ handleSaveExpense }: AddExpenseProps) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const initialValues: ExpenseFormType = {
@@ -49,18 +49,19 @@ export const updateExpence = ({ handleSaveExpense }: AddExpenseProps) => {
     description: '',
     type: null,
     amount: 0.00,
-    date: null,
+    date: '',
   };
 
   const handleFormSubmit = (values: ExpenseFormType) => {
     handleSaveExpense(values);
+    onOpenChange();
   };
 
   return (
     <div>
       <>
         <Button onPress={onOpen} color="primary">
-          Add Expences
+          Add Expenses
         </Button>
         <Modal
           isOpen={isOpen}
@@ -71,7 +72,7 @@ export const updateExpence = ({ handleSaveExpense }: AddExpenseProps) => {
             {(onClose) => (
               <>
                 <ModalHeader className="flex flex-col gap-1">
-                  Add Expence
+                  Add Expense
                 </ModalHeader>
                 <ModalBody>
                   <Formik
@@ -89,7 +90,7 @@ export const updateExpence = ({ handleSaveExpense }: AddExpenseProps) => {
                       <>
                         <select
                           name="type"
-                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                           value={values.type || ''}
                           onChange={handleChange}
                         >
@@ -152,11 +153,11 @@ export const updateExpence = ({ handleSaveExpense }: AddExpenseProps) => {
                             </div>
                           }
                         />
+                        <Button color="primary" onPress={() => handleSubmit()}>
+                          Add Expense
+                        </Button>
                         <Button color="danger" variant="flat" onClick={onClose}>
                           Close
-                        </Button>
-                        <Button color="primary" onPress={() => handleSubmit()}>
-                          Add Expence
                         </Button>
                       </>
                     )}

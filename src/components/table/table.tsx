@@ -4,7 +4,6 @@ import {
   TableColumn,
   TableHeader,
 } from "@nextui-org/react";
-import React from "react";
 
 interface Column {
   name: string;
