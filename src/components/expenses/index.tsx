@@ -2,20 +2,24 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { HouseIcon } from '@/components/icons/breadcrumb/house-icon';
-import { PaymentsIcon } from '@/components/icons/breadcrumb/payments-icon';
-import { TableWrapper } from '@/components/table/table';
-import { AddExpense } from './add-expense';
-import { TableRow, TableCell, Tooltip, Chip } from '@nextui-org/react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/redux/store';
+import { TableRow, TableCell, Tooltip, Chip } from '@nextui-org/react';
+import { HouseIcon } from '@/components/icons/breadcrumb/house-icon';
 import { EditIcon } from '../icons/table/edit-icon';
 import { DeleteIcon } from '../icons/table/delete-icon';
-import { createExpense, updateExpense, getExpenses, deleteExpense } from '@/redux/slices/expenses-reducer';
+import { TableWrapper } from '@/components/table/table';
+import { AddExpense } from './add-expense';
+import { AppDispatch, RootState } from '@/redux/store';
 import { Expense, ExpenseFormType } from '@/helpers/types';
 import Alert from '../Alert/alert';
 import { UpdateExpense } from './update-expense ';
-import { formatDate } from "@/utils/utils";
+import { formatDate } from '@/utils/utils';
+import {
+  createExpense,
+  updateExpense,
+  getExpenses,
+  deleteExpense,
+} from '@/redux/slices/expenses-reducer';
 
 export const columns = [
   { name: 'Title', uid: 'title' },
@@ -31,7 +35,7 @@ export const Expenses = () => {
   const [currentExpense, setCurrentExpense] = useState<Expense | null>(null);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
 
-  const { expenses, createPending, alert } = useSelector(
+  const { expenses, alert } = useSelector(
     (state: RootState) => state?.expenses
   );
 
@@ -40,7 +44,7 @@ export const Expenses = () => {
   const handleSaveExpense = async (expense: ExpenseFormType) => {
     await dispatch(createExpense(expense));
 
-    dispatch(getExpenses())
+    dispatch(getExpenses());
   };
 
   const handleClickEditExpense = (expense: Expense) => {
@@ -51,14 +55,13 @@ export const Expenses = () => {
   const handleEditExpense = async (expense: Expense) => {
     await dispatch(updateExpense(expense));
 
-    dispatch(getExpenses())
+    dispatch(getExpenses());
   };
 
   const handleDeleteExpense = async (id: string) => {
-    console.log(id)
     await dispatch(deleteExpense(id));
 
-    dispatch(getExpenses())
+    dispatch(getExpenses());
   };
 
   useEffect(() => {
@@ -92,10 +95,7 @@ export const Expenses = () => {
                 </Tooltip>
               </div>
               <div>
-                <Tooltip
-                  content="Delete user"
-                  color="danger"
-                >
+                <Tooltip content="Delete user" color="danger">
                   <button onClick={() => handleDeleteExpense(expense._id)}>
                     <DeleteIcon size={20} fill="#FF0080" />
                   </button>
@@ -120,7 +120,6 @@ export const Expenses = () => {
         </li>
 
         <li className="flex gap-2">
-          <PaymentsIcon />
           <span>Expenses</span>
           <span> / </span>{' '}
         </li>
@@ -131,8 +130,7 @@ export const Expenses = () => {
 
       <h3 className="text-xl font-semibold">All Expenses</h3>
       <div className="flex justify-between flex-wrap gap-4 items-center">
-        <div className="flex items-center gap-3 flex-wrap md:flex-nowrap">
-        </div>
+        <div className="flex items-center gap-3 flex-wrap md:flex-nowrap"></div>
         <div className="flex flex-row gap-3.5 flex-wrap">
           <AddExpense handleSaveExpense={handleSaveExpense} />
         </div>
@@ -148,9 +146,9 @@ export const Expenses = () => {
         <TableWrapper columns={columns} rows={tableRows()} />
         <UpdateExpense
           handleEditExpense={handleEditExpense}
+          setShowUpdateModal={setShowUpdateModal}
           expense={currentExpense}
           isModalOpen={showUpdateModal}
-          setShowUpdateModal={setShowUpdateModal}
         />
       </div>
     </div>

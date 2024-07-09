@@ -1,5 +1,5 @@
-import { Navbar, NavbarContent } from '@nextui-org/react';
 import React from 'react';
+import { Navbar, NavbarContent } from '@nextui-org/react';
 import { BurguerButton } from './burguer-button';
 import { UserDropdown } from './user-dropdown';
 

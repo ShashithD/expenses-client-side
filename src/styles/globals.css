@@ -12,7 +12,7 @@ body {
   box-sizing: border-box;
 }
 
-.graph-container{
+.graph-container {
   height: 100%;
   width: 100%;
 }
@@ -31,13 +31,15 @@ body {
   }
 }
 
-.user-avatar-btn{
+.user-avatar-btn {
   border: none;
   outline: none;
   background: none;
 }
 
-.user-avatar-btn:hover, .user-avatar-btn:focus, .user-avatar-btn:active {
+.user-avatar-btn:hover,
+.user-avatar-btn:focus,
+.user-avatar-btn:active {
   border: none;
   outline: none;
   background: none;

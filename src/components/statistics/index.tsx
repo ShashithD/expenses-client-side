@@ -1,12 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Input } from '@nextui-org/react';
 import Link from 'next/link';
+import { useSelector } from 'react-redux';
 import { HouseIcon } from '@/components/icons/breadcrumb/house-icon';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/redux/store';
-import { getExpenses } from '@/redux/slices/expenses-reducer';
+import { RootState } from '@/redux/store';
 import PieChart from './chart';
 
 export const Statistics = () => {

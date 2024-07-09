@@ -123,12 +123,13 @@ export const createExpense = createAsyncThunk(
     } catch (error) {
       if (isAxiosError(error) && error.response) {
         let message = 'Failed to sign in';
-        // Check if the message is in an array and join them if it is
+
         if (Array.isArray(error.response.data.message)) {
           message = error.response.data.message.join(' ');
         } else if (typeof error.response.data.message === 'string') {
           message = error.response.data.message;
         }
+
         return rejectWithValue(message);
       } else {
         return rejectWithValue('Unknown error');
@@ -141,7 +142,10 @@ export const updateExpense = createAsyncThunk(
   'expenses/update',
   async (expenseData: Expense, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.patch(`/expenses/${expenseData._id}`, expenseData);
+      const response = await axiosInstance.patch(
+        `/expenses/${expenseData._id}`,
+        expenseData
+      );
       return response.data;
     } catch (error) {
       if (isAxiosError(error)) {
@@ -149,9 +153,11 @@ export const updateExpense = createAsyncThunk(
           'Failed to create expense:',
           error?.response?.data?.message
         );
+
         return rejectWithValue(error?.response?.data?.message);
       } else {
         console.error('Unexpected error:', error);
+
         return rejectWithValue('Unknown error');
       }
     }
@@ -170,16 +176,18 @@ export const deleteExpense = createAsyncThunk(
           'Failed to create expense:',
           error?.response?.data?.message
         );
+
         return rejectWithValue(error?.response?.data?.message);
       } else {
         console.error('Unexpected error:', error);
+
         return rejectWithValue('Unknown error');
       }
     }
   }
 );
 
-export const getChartData= createAsyncThunk(
+export const getChartData = createAsyncThunk(
   'expenses/fetchAll',
   async (_, { dispatch }) => {
     try {

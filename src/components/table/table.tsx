@@ -1,13 +1,9 @@
-import {
-  Table,
-  TableBody,
-  TableColumn,
-  TableHeader,
-} from "@nextui-org/react";
+import React from 'react';
+import { Table, TableBody, TableColumn, TableHeader } from '@nextui-org/react';
 
 interface Column {
   name: string;
-  uid: string
+  uid: string;
 }
 
 interface TableWrapperProps {
@@ -15,7 +11,7 @@ interface TableWrapperProps {
   rows: React.JSX.Element[];
 }
 
-export const TableWrapper = ({columns, rows}: TableWrapperProps) => {
+export const TableWrapper = ({ columns, rows }: TableWrapperProps) => {
   return (
     <div className=" w-full flex flex-col gap-4">
       <Table aria-label="Example table with custom cells">
@@ -23,16 +19,14 @@ export const TableWrapper = ({columns, rows}: TableWrapperProps) => {
           {(column) => (
             <TableColumn
               key={column.uid}
-              hideHeader={column.uid === "actions"}
-              align={column.uid === "actions" ? "center" : "start"}
+              hideHeader={column.uid === 'actions'}
+              align={column.uid === 'actions' ? 'center' : 'start'}
             >
               {column.name}
             </TableColumn>
           )}
         </TableHeader>
-        <TableBody items={rows}>
-          {rows}
-        </TableBody>
+        <TableBody items={rows}>{rows}</TableBody>
       </Table>
     </div>
   );

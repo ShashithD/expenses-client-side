@@ -1,6 +1,5 @@
 import { Formik } from 'formik';
 import * as yup from 'yup';
-
 import {
   Button,
   Input,
@@ -12,23 +11,14 @@ import {
   useDisclosure,
 } from '@nextui-org/react';
 import { ExpenseFormType } from '@/helpers/types';
-
-export enum ExpenseType {
-  Food = 'Food',
-  Rent = 'Rent',
-  Transport = 'Transport',
-  Utilities = 'Utilities',
-  Subscriptions = 'Subscriptions',
-  Entertainment = 'Entertainment',
-  Other = 'Other',
-}
+import { ExpenseEnumType } from '@/helpers/enum';
 
 const ExpenseValidationSchema = yup.object({
   title: yup.string().required('Title is required'),
   description: yup.string().required('Description is required'),
   type: yup
     .string()
-    .oneOf(Object.values(ExpenseType), 'Invalid expense type')
+    .oneOf(Object.values(ExpenseEnumType), 'Invalid expense type')
     .required('Expense type is required'),
   amount: yup
     .number()
@@ -95,7 +85,7 @@ export const AddExpense = ({ handleSaveExpense }: AddExpenseProps) => {
                           onChange={handleChange}
                         >
                           <option value="">Choose an expense type</option>
-                          {Object.values(ExpenseType).map((type) => (
+                          {Object.values(ExpenseEnumType).map((type) => (
                             <option key={type} value={type}>
                               {type}
                             </option>

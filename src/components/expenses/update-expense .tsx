@@ -1,7 +1,6 @@
-import {useEffect} from "react";
+import { useEffect } from 'react';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-
 import {
   Button,
   Input,
@@ -13,24 +12,15 @@ import {
   useDisclosure,
 } from '@nextui-org/react';
 import { ExpenseFormType, Expense } from '@/helpers/types';
-import { formatDate } from "@/utils/utils";
-
-export enum ExpenseType {
-  Food = 'Food',
-  Rent = 'Rent',
-  Transport = 'Transport',
-  Utilities = 'Utilities',
-  Subscriptions = 'Subscriptions',
-  Entertainment = 'Entertainment',
-  Other = 'Other',
-}
+import { formatDate } from '@/utils/utils';
+import { ExpenseEnumType } from '@/helpers/enum';
 
 const ExpenseValidationSchema = yup.object({
   title: yup.string().required('Title is required'),
   description: yup.string().required('Description is required'),
   type: yup
     .string()
-    .oneOf(Object.values(ExpenseType), 'Invalid expense type')
+    .oneOf(Object.values(ExpenseEnumType), 'Invalid expense type')
     .required('Expense type is required'),
   amount: yup
     .number()
@@ -41,16 +31,16 @@ const ExpenseValidationSchema = yup.object({
 
 interface updateExpenseProps {
   handleEditExpense: (expense: Expense) => void;
+  setShowUpdateModal: (showUpdateModal: boolean) => void;
   expense: Expense | null;
   isModalOpen: boolean;
-  setShowUpdateModal: (showUpdateModal: boolean) => void
 }
 
 export const UpdateExpense = ({
   handleEditExpense,
+  setShowUpdateModal,
   expense,
   isModalOpen,
-  setShowUpdateModal
 }: updateExpenseProps) => {
   let { isOpen, onOpenChange } = useDisclosure();
 
@@ -59,7 +49,7 @@ export const UpdateExpense = ({
   }, [isModalOpen]);
 
   useEffect(() => {
-    setShowUpdateModal(isOpen)
+    setShowUpdateModal(isOpen);
   }, [isOpen]);
 
   const initialValues: ExpenseFormType = {
@@ -71,7 +61,7 @@ export const UpdateExpense = ({
   };
 
   const handleFormSubmit = (values: ExpenseFormType) => {
-    const editedExpense: Expense = {...values, _id: expense?._id || ''}
+    const editedExpense: Expense = { ...values, _id: expense?._id || '' };
 
     handleEditExpense(editedExpense);
     onOpenChange();
@@ -100,7 +90,7 @@ export const UpdateExpense = ({
                       onChange={handleChange}
                     >
                       <option value="">Choose an expense type</option>
-                      {Object.values(ExpenseType).map((type) => (
+                      {Object.values(ExpenseEnumType).map((type) => (
                         <option key={type} value={type}>
                           {type}
                         </option>

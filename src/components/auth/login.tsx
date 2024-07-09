@@ -1,16 +1,16 @@
 'use client';
 
+import { useCallback, useEffect, useState } from 'react';
+import { unwrapResult } from '@reduxjs/toolkit';
+import Link from 'next/link';
 import { signIn } from '@/redux/slices/auth-reducer';
+import { Formik } from 'formik';
+import { useRouter } from 'next/navigation';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button, Input } from '@nextui-org/react';
 import { LoginSchema } from '@/helpers/schemas';
 import { LoginFormType } from '@/helpers/types';
-import { Button, Input } from '@nextui-org/react';
-import { Formik } from 'formik';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
-import { unwrapResult } from '@reduxjs/toolkit';
 import Alert from '../Alert/alert';
 
 export const Login = () => {
@@ -26,14 +26,14 @@ export const Login = () => {
     password: 'admin',
   };
 
-  const accessToken =
-    typeof window !== 'undefined' ? localStorage.getItem('jwt') : null;
-
   useEffect(() => {
+    const accessToken =
+      typeof window !== 'undefined' ? localStorage.getItem('jwt') : null;
+
     if (accessToken) {
       router.replace('/');
     }
-  }, [accessToken]);
+  }, [router]);
 
   const handleLogin = useCallback(
     async (values: LoginFormType) => {

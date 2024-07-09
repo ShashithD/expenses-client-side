@@ -6,7 +6,7 @@ export function generatePlaceholderImage(name: string) {
   canvas.width = size;
   canvas.height = size;
 
-  console.log(name)
+  console.log(name);
 
   if (context) {
     context.fillStyle = '#7C57C8'; // Background color

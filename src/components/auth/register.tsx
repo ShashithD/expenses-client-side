@@ -1,16 +1,16 @@
 'use client';
 
-import { RegisterSchema } from '@/helpers/schemas';
-import { RegisterFormType } from '@/helpers/types';
-import { Button, Input } from '@nextui-org/react';
+import { useCallback, useState, useEffect } from 'react';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { Formik } from 'formik';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useCallback, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Button, Input } from '@nextui-org/react';
+import { RegisterSchema } from '@/helpers/schemas';
+import { RegisterFormType } from '@/helpers/types';
 import { AppDispatch, RootState } from '@/redux/store';
 import { signUp } from '@/redux/slices/auth-reducer';
-import { unwrapResult } from '@reduxjs/toolkit';
 import Alert from '../Alert/alert';
 
 export const Register = () => {

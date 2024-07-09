@@ -1,7 +1,7 @@
-import axiosInstance from '../../../axiosConfig';
 import { createSlice } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { isAxiosError } from 'axios';
+import axiosInstance from '../../../axiosConfig';
 
 interface SignInData {
   email: string;
@@ -14,14 +14,7 @@ interface SignUpData {
   password: string;
 }
 
-interface InitialUserDetails {
-  name: string;
-  id: string;
-  email: string;
-}
-
 interface AuthState {
-  userDetails: InitialUserDetails;
   errorMessage: string | null;
   alert: {
     show: boolean;
@@ -30,14 +23,7 @@ interface AuthState {
   };
 }
 
-const initialUserDetails = {
-  name: '',
-  id: '',
-  email: '',
-};
-
 const initialState: AuthState = {
-  userDetails: initialUserDetails,
   errorMessage: null,
   alert: {
     show: false,
@@ -50,9 +36,6 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    setUserDetails: (state, action) => {
-      state.userDetails = action.payload;
-    },
     setAlertData: (state, action) => {
       state.alert = action.payload;
     },
@@ -80,7 +63,7 @@ export const signUp = createAsyncThunk(
   'auth/signup',
   async (
     { name, email, password }: SignUpData,
-    { dispatch, rejectWithValue }
+    { rejectWithValue }
   ) => {
     try {
       const response = await axiosInstance.post('auth/signup', {
@@ -88,8 +71,6 @@ export const signUp = createAsyncThunk(
         email,
         password,
       });
-
-      dispatch(setUserDetails(response.data.userDetails));
 
       localStorage.setItem('jwt', response.data.token);
       localStorage.setItem('name', response.data.userDetails.name);
@@ -100,11 +81,13 @@ export const signUp = createAsyncThunk(
     } catch (error) {
       if (isAxiosError(error) && error.response) {
         let message = 'Failed to sign in';
+
         if (Array.isArray(error.response.data.message)) {
           message = error.response.data.message.join(' ');
         } else if (typeof error.response.data.message === 'string') {
           message = error.response.data.message;
         }
+
         return rejectWithValue(message);
       } else {
         return rejectWithValue('Unknown error');
@@ -115,14 +98,12 @@ export const signUp = createAsyncThunk(
 
 export const signIn = createAsyncThunk(
   'auth/signin',
-  async ({ email, password }: SignInData, { dispatch, rejectWithValue }) => {
+  async ({ email, password }: SignInData, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post('auth/login', {
         email,
         password,
       });
-
-      dispatch(setUserDetails(response.data.userDetails));
 
       localStorage.setItem('jwt', response.data.token);
       localStorage.setItem('name', response.data.userDetails.name);
@@ -133,12 +114,13 @@ export const signIn = createAsyncThunk(
     } catch (error) {
       if (isAxiosError(error) && error.response) {
         let message = 'Failed to sign in';
-        // Check if the message is in an array and join them if it is
+
         if (Array.isArray(error.response.data.message)) {
           message = error.response.data.message.join(' ');
         } else if (typeof error.response.data.message === 'string') {
           message = error.response.data.message;
         }
+
         return rejectWithValue(message);
       } else {
         return rejectWithValue('Unknown error');
@@ -159,14 +141,13 @@ export const signOut = createAsyncThunk(
         message: 'Sign-out successful!',
       };
 
-      dispatch(setUserDetails(initialUserDetails));
-      dispatch(setAlertData(alert))
+      dispatch(setAlertData(alert));
     } catch (error) {
       console.log(error);
     }
   }
 );
 
-export const { setUserDetails, setAlertData } = authSlice.actions;
+export const { setAlertData } = authSlice.actions;
 
 export default authSlice.reducer;
