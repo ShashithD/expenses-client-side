@@ -2,17 +2,20 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/redux/store';
 import { CardBalance1 } from './card-balance1';
 import Alert from '../Alert/alert';
 import { alertPercentage, maxTotalPerMonth } from '@/config/config';
+import { resetAlert } from '@/redux/slices/expenses-reducer';
 
 export const Content = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [percentage, setPercentage] = useState(0);
 
   const { monthlyTotal } = useSelector((state: RootState) => state?.expenses);
+
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     const currentPercentage = (monthlyTotal / maxTotalPerMonth) * 100;
@@ -22,7 +25,7 @@ export const Content = () => {
   }, [monthlyTotal]);
 
   const handleCloseAlert = () => {
-    setShowAlert(false);
+    dispatch(resetAlert());
   };
 
   return (

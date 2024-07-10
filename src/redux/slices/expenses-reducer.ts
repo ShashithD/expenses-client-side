@@ -3,6 +3,11 @@ import { isAxiosError } from 'axios';
 import axiosInstance from '../../../axiosConfig';
 import { Expense, ExpenseFormType } from '@/helpers/types';
 
+interface getExpensesParams {
+  startDate?: string;
+  endDate?: string;
+}
+
 interface ExpensesState {
   expenses: Expense[];
   createPending: boolean;
@@ -41,6 +46,9 @@ export const expensesSlice = createSlice({
     },
     setStatistics: (state, action) => {
       state.statistics = action.payload;
+    },
+    resetAlert: (state) => {
+      state.alert = { ...initialState.alert };
     },
   },
   extraReducers: (builder) => {
@@ -107,9 +115,13 @@ export const expensesSlice = createSlice({
 
 export const getExpenses = createAsyncThunk(
   'expenses/fetchAll',
-  async (_, { dispatch }) => {
+  async ({startDate, endDate}: getExpensesParams, { dispatch }) => {
     try {
-      const expenses = await axiosInstance.get('/expenses');
+      const params: getExpensesParams = {};
+      if (startDate) params.startDate = startDate;
+      if (endDate) params.endDate = endDate;
+
+      const expenses = await axiosInstance.get('/expenses', { params });
 
       dispatch(setExpenses(expenses?.data || []));
     } catch (error) {
@@ -218,7 +230,7 @@ export const getTotalExpensesForCurrentMonth = createAsyncThunk(
   }
 );
 
-export const { setExpenses, setStatistics, setMonthlyTotal } =
+export const { setExpenses, setStatistics, setMonthlyTotal, resetAlert } =
   expensesSlice.actions;
 
 export default expensesSlice.reducer;

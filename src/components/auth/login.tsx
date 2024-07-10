@@ -12,6 +12,7 @@ import { LoginSchema } from '@/helpers/schemas';
 import { LoginFormType } from '@/helpers/types';
 import { AppDispatch, RootState } from '@/redux/store';
 import Alert from '../Alert/alert';
+import { resetAlert } from '@/redux/slices/expenses-reducer';
 
 export const Login = () => {
   const router = useRouter();
@@ -51,7 +52,7 @@ export const Login = () => {
   );
 
   const handleCloseAlert = () => {
-    setShowAlert(false);
+    dispatch(resetAlert());
   };
 
   useEffect(() => {

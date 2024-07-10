@@ -3,7 +3,14 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
-import { TableRow, TableCell, Tooltip, Chip } from '@nextui-org/react';
+import {
+  TableRow,
+  TableCell,
+  Tooltip,
+  Chip,
+  DatePicker,
+} from '@nextui-org/react';
+import { parseDate } from '@internationalized/date';
 import { HouseIcon } from '@/components/icons/breadcrumb/house-icon';
 import { EditIcon } from '../icons/table/edit-icon';
 import { DeleteIcon } from '../icons/table/delete-icon';
@@ -19,12 +26,13 @@ import {
   updateExpense,
   getExpenses,
   deleteExpense,
+  resetAlert,
 } from '@/redux/slices/expenses-reducer';
 
 interface Column {
   name: string;
   uid: string;
-  align?: "center" | "start" | "end" | undefined
+  align?: 'center' | 'start' | 'end' | undefined;
 }
 
 export const columns: Column[] = [
@@ -36,10 +44,29 @@ export const columns: Column[] = [
   { name: 'ACTIONS', uid: 'actions', align: 'center' },
 ];
 
+function getFirstDayOfCurrentMonth() {
+  const date = new Date();
+  date.setDate(1);
+  return date;
+}
+
+function getLastDayOfCurrentMonth() {
+  const date = new Date();
+  date.setMonth(date.getMonth() + 1);
+  date.setDate(0);
+  return date;
+}
+
 export const Expenses = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [currentExpense, setCurrentExpense] = useState<Expense | null>(null);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [startDate, setStartDate] = useState(
+    parseDate(getFirstDayOfCurrentMonth().toISOString().split('T')[0])
+  );
+  const [endDate, setEndDate] = useState(
+    parseDate(getLastDayOfCurrentMonth().toISOString().split('T')[0])
+  );
 
   const { expenses, alert } = useSelector(
     (state: RootState) => state?.expenses
@@ -47,10 +74,23 @@ export const Expenses = () => {
 
   const dispatch = useDispatch<AppDispatch>();
 
+  const handleGetExpenses = () => {
+    dispatch(
+      getExpenses({
+        startDate: startDate.toString().split('T')[0],
+        endDate: endDate.toString().split('T')[0],
+      })
+    );
+  };
+
+  useEffect(() => {
+    handleGetExpenses();
+  }, [startDate, endDate]);
+
   const handleSaveExpense = async (expense: ExpenseFormType) => {
     await dispatch(createExpense(expense));
 
-    dispatch(getExpenses());
+    handleGetExpenses();
   };
 
   const handleClickEditExpense = (expense: Expense) => {
@@ -61,13 +101,13 @@ export const Expenses = () => {
   const handleEditExpense = async (expense: Expense) => {
     await dispatch(updateExpense(expense));
 
-    dispatch(getExpenses());
+    handleGetExpenses();
   };
 
   const handleDeleteExpense = async (id: string) => {
     await dispatch(deleteExpense(id));
 
-    dispatch(getExpenses());
+    handleGetExpenses();
   };
 
   useEffect(() => {
@@ -75,7 +115,7 @@ export const Expenses = () => {
   }, [alert]);
 
   const handleCloseAlert = () => {
-    setShowAlert(false);
+    dispatch(resetAlert());
   };
 
   const tableRows = () => {
@@ -134,9 +174,22 @@ export const Expenses = () => {
         </li>
       </ul>
 
-      <h3 className="text-xl font-semibold">All Expenses</h3>
+      <h3 className="text-xl font-semibold">Expenses List</h3>
       <div className="flex justify-between flex-wrap gap-4 items-center">
-        <div className="flex items-center gap-3 flex-wrap md:flex-nowrap"></div>
+        <div className="flex items-center gap-3 flex-wrap md:flex-nowrap">
+          <DatePicker
+            label="From date"
+            className="max-w-[284px]"
+            defaultValue={startDate}
+            onChange={(date) => setStartDate(date)}
+          />
+          <DatePicker
+            label="To date"
+            className="max-w-[284px]"
+            defaultValue={endDate}
+            onChange={(date) => setEndDate(date)}
+          />
+        </div>
         <div className="flex flex-row gap-3.5 flex-wrap">
           <AddExpense handleSaveExpense={handleSaveExpense} />
         </div>

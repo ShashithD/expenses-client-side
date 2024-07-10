@@ -12,6 +12,7 @@ import { RegisterFormType } from '@/helpers/types';
 import { AppDispatch, RootState } from '@/redux/store';
 import { signUp } from '@/redux/slices/auth-reducer';
 import Alert from '../Alert/alert';
+import { resetAlert } from '@/redux/slices/expenses-reducer';
 
 export const Register = () => {
   const router = useRouter();
@@ -44,7 +45,7 @@ export const Register = () => {
   );
 
   const handleCloseAlert = () => {
-    setShowAlert(false);
+    dispatch(resetAlert());
   };
 
   useEffect(() => {
