@@ -21,13 +21,19 @@ import {
   deleteExpense,
 } from '@/redux/slices/expenses-reducer';
 
-export const columns = [
+interface Column {
+  name: string;
+  uid: string;
+  align?: "center" | "start" | "end" | undefined
+}
+
+export const columns: Column[] = [
   { name: 'Title', uid: 'title' },
   { name: 'Description', uid: 'role' },
-  { name: 'Amount', uid: 'status' },
-  { name: 'Date', uid: 'date' },
+  { name: 'Amount', uid: 'status', align: 'end' },
+  { name: 'Date', uid: 'date', align: 'center' },
   { name: 'Type', uid: 'type' },
-  { name: 'ACTIONS', uid: 'actions' },
+  { name: 'ACTIONS', uid: 'actions', align: 'center' },
 ];
 
 export const Expenses = () => {
@@ -78,7 +84,7 @@ export const Expenses = () => {
         <TableRow key={index}>
           <TableCell>{expense.title}</TableCell>
           <TableCell>{expense.description}</TableCell>
-          <TableCell>{expense.amount}</TableCell>
+          <TableCell>${expense.amount}</TableCell>
           <TableCell>{formatDate(expense.date)}</TableCell>
           <TableCell>
             <Chip size="sm" variant="flat" color={'default'}>

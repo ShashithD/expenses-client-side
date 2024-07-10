@@ -14,8 +14,6 @@ const ExpensesPage = () => {
     dispatch(getExpenses());
   }, []);
 
-  console.log('accessToken');
-
   return (
     <WithAuth>
       <Expenses />

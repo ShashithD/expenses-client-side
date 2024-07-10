@@ -4,6 +4,7 @@ import { Table, TableBody, TableColumn, TableHeader } from '@nextui-org/react';
 interface Column {
   name: string;
   uid: string;
+  align?: "center" | "start" | "end" | undefined
 }
 
 interface TableWrapperProps {
@@ -20,7 +21,7 @@ export const TableWrapper = ({ columns, rows }: TableWrapperProps) => {
             <TableColumn
               key={column.uid}
               hideHeader={column.uid === 'actions'}
-              align={column.uid === 'actions' ? 'center' : 'start'}
+              align={column.align || 'start'}
             >
               {column.name}
             </TableColumn>

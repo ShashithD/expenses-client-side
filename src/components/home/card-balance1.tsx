@@ -1,8 +1,19 @@
 import { Card, CardBody } from '@nextui-org/react';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Community } from '../icons/community';
+import { maxTotalPerMonth } from '@/config/config';
 
-export const CardBalance1 = () => {
+interface CardBalance1Props {
+  monthlyTotal: number;
+}
+
+export const CardBalance1 = ({ monthlyTotal }: CardBalance1Props) => {
+  const [percentage, setPercentage] = useState(0);
+
+  useEffect(() => {
+    setPercentage(Math.round((monthlyTotal / maxTotalPerMonth) * 100));
+  }, [monthlyTotal]);
+
   return (
     <Card className="xl:max-w-sm bg-primary rounded-xl shadow-md px-3 w-full">
       <CardBody className="py-5 overflow-hidden">
@@ -10,28 +21,30 @@ export const CardBalance1 = () => {
           <Community />
           <div className="flex flex-col">
             <span className="text-white">Total Exoences</span>
-            <span className="text-white text-xs">Last Year</span>
+            <span className="text-white text-xs">Current Month</span>
           </div>
         </div>
         <div className="flex gap-2.5 py-2 items-center">
-          <span className="text-white text-xl font-semibold">$45,910</span>
-          <span className="text-success text-xs">+ 4.5%</span>
+          <span className="text-white text-xl font-semibold">
+            ${monthlyTotal}
+          </span>
+          <span className="text-white text-xs">
+            {percentage}% of monthly total(${maxTotalPerMonth})
+          </span>
         </div>
         <div className="flex items-center gap-6">
           <div>
             <div>
               <span className="font-semibold text-success text-xs">{'↓'}</span>
-              <span className="text-xs text-white">100,930</span>
+              <span className="text-xs text-white">$0</span>
             </div>
-            <span className="text-white text-xs">USD</span>
           </div>
 
           <div>
             <div>
               <span className="font-semibold text-danger text-xs">{'↑'}</span>
-              <span className="text-xs text-white">54,120</span>
+              <span className="text-xs text-white">$0</span>
             </div>
-            <span className="text-white text-xs">USD</span>
           </div>
         </div>
       </CardBody>

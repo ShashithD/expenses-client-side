@@ -8,6 +8,7 @@ interface ExpensesState {
   createPending: boolean;
   updatePending: boolean;
   statistics: [];
+  monthlyTotal: number;
   alert: {
     show: boolean;
     type: string;
@@ -20,6 +21,7 @@ const initialState: ExpensesState = {
   createPending: false,
   updatePending: false,
   statistics: [],
+  monthlyTotal: 0,
   alert: {
     show: false,
     type: 'success',
@@ -33,6 +35,9 @@ export const expensesSlice = createSlice({
   reducers: {
     setExpenses: (state, action) => {
       state.expenses = action.payload;
+    },
+    setMonthlyTotal: (state, action) => {
+      state.monthlyTotal = action.payload;
     },
     setStatistics: (state, action) => {
       state.statistics = action.payload;
@@ -200,6 +205,20 @@ export const getChartData = createAsyncThunk(
   }
 );
 
-export const { setExpenses, setStatistics } = expensesSlice.actions;
+export const getTotalExpensesForCurrentMonth = createAsyncThunk(
+  'expenses/fetchTotalCurrentMonth',
+  async (_, { dispatch }) => {
+    try {
+      const response = await axiosInstance.get('/expenses/total-current-month');
+
+      dispatch(setMonthlyTotal(response.data.total));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+export const { setExpenses, setStatistics, setMonthlyTotal } =
+  expensesSlice.actions;
 
 export default expensesSlice.reducer;
