@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { unwrapResult } from '@reduxjs/toolkit';
 import Link from 'next/link';
-import { signIn } from '@/redux/slices/auth-reducer';
 import { Formik } from 'formik';
 import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,8 +10,8 @@ import { Button, Input } from '@nextui-org/react';
 import { LoginSchema } from '@/helpers/schemas';
 import { LoginFormType } from '@/helpers/types';
 import { AppDispatch, RootState } from '@/redux/store';
+import { signIn, resetAlert } from '@/redux/slices/auth-reducer';
 import Alert from '../Alert/alert';
-import { resetAlert } from '@/redux/slices/expenses-reducer';
 
 export const Login = () => {
   const router = useRouter();
@@ -53,7 +52,10 @@ export const Login = () => {
 
   const handleCloseAlert = () => {
     dispatch(resetAlert());
+    console.log('-------------');
   };
+
+  console.log(alert.show);
 
   useEffect(() => {
     setShowAlert(alert.show);

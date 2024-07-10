@@ -10,9 +10,8 @@ import { Button, Input } from '@nextui-org/react';
 import { RegisterSchema } from '@/helpers/schemas';
 import { RegisterFormType } from '@/helpers/types';
 import { AppDispatch, RootState } from '@/redux/store';
-import { signUp } from '@/redux/slices/auth-reducer';
+import { signUp, resetAlert } from '@/redux/slices/auth-reducer';
 import Alert from '../Alert/alert';
-import { resetAlert } from '@/redux/slices/expenses-reducer';
 
 export const Register = () => {
   const router = useRouter();

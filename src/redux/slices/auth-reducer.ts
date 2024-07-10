@@ -39,6 +39,9 @@ const authSlice = createSlice({
     setAlertData: (state, action) => {
       state.alert = action.payload;
     },
+    resetAlert: (state) => {
+      state.alert = { ...initialState.alert };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -61,10 +64,7 @@ const authSlice = createSlice({
 
 export const signUp = createAsyncThunk(
   'auth/signup',
-  async (
-    { name, email, password }: SignUpData,
-    { rejectWithValue }
-  ) => {
+  async ({ name, email, password }: SignUpData, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post('auth/signup', {
         name,
@@ -148,6 +148,6 @@ export const signOut = createAsyncThunk(
   }
 );
 
-export const { setAlertData } = authSlice.actions;
+export const { setAlertData, resetAlert } = authSlice.actions;
 
 export default authSlice.reducer;
