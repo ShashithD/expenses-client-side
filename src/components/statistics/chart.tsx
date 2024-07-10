@@ -22,8 +22,6 @@ const PieChart = () => {
 
   const data = transformData(statistics);
 
-  console.log(statistics);
-
   const options = {
     title: 'Past Expenses',
   };

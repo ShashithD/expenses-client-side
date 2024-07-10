@@ -31,8 +31,6 @@ export const UserDropdown = () => {
     router.replace('/login');
   }, [router]);
 
-  console.log(generatePlaceholderImage(userDetails.name));
-
   return (
     <Dropdown>
       <NavbarItem>
