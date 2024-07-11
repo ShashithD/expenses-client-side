@@ -41,11 +41,11 @@ export const Content = () => {
                 onClose={handleCloseAlert}
               />
             )}
-            <Link href="/expenses">
-              <div className="grid md:grid-cols-2 grid-cols-1 2xl:grid-cols-3 gap-5  justify-center w-full">
+            <div className="grid md:grid-cols-2 grid-cols-1 2xl:grid-cols-3 gap-5  justify-center w-full">
+              <Link href="/expenses">
                 <CardBalance1 monthlyTotal={monthlyTotal} />
-              </div>
-            </Link>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
