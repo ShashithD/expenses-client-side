@@ -20,7 +20,7 @@ export const CardBalance1 = ({ monthlyTotal }: CardBalance1Props) => {
         <div className="flex gap-2.5">
           <Community />
           <div className="flex flex-col">
-            <span className="text-white">Total Exoences</span>
+            <span className="text-white">Total Expenses</span>
             <span className="text-white text-xs">Current Month</span>
           </div>
         </div>
