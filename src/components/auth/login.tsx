@@ -52,10 +52,7 @@ export const Login = () => {
 
   const handleCloseAlert = () => {
     dispatch(resetAlert());
-    console.log('-------------');
   };
-
-  console.log(alert.show);
 
   useEffect(() => {
     setShowAlert(alert.show);
