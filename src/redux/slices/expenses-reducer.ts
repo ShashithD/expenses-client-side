@@ -10,8 +10,9 @@ interface getExpensesParams {
 
 interface ExpensesState {
   expenses: Expense[];
-  createPending: boolean;
-  updatePending: boolean;
+  loading: boolean;
+  expensesLoading: boolean;
+  chartLoading: boolean;
   statistics: [];
   monthlyTotal: number;
   alert: {
@@ -23,8 +24,9 @@ interface ExpensesState {
 
 const initialState: ExpensesState = {
   expenses: [],
-  createPending: false,
-  updatePending: false,
+  loading: true,
+  expensesLoading: true,
+  chartLoading: true,
   statistics: [],
   monthlyTotal: 0,
   alert: {
@@ -53,12 +55,30 @@ export const expensesSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(getTotalExpensesForCurrentMonth.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getTotalExpensesForCurrentMonth.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(getExpenses.pending, (state) => {
+        state.expensesLoading = true;
+      })
+      .addCase(getExpenses.fulfilled, (state) => {
+        state.expensesLoading = false;
+      })
+      .addCase(getChartData.pending, (state) => {
+        state.chartLoading = true;
+      })
+      .addCase(getChartData.fulfilled, (state) => {
+        state.chartLoading = false;
+      })
       .addCase(createExpense.pending, (state) => {
-        state.createPending = true;
+        state.expensesLoading = true;
       })
       .addCase(createExpense.fulfilled, (state, action) => {
         state.expenses.push(action.payload);
-        state.createPending = false;
+        state.expensesLoading = false;
         state.alert = {
           show: true,
           type: 'success',
@@ -66,7 +86,7 @@ export const expensesSlice = createSlice({
         };
       })
       .addCase(createExpense.rejected, (state, action) => {
-        state.createPending = false;
+        state.expensesLoading = false;
         state.alert = {
           show: true,
           type: 'error',
@@ -74,11 +94,11 @@ export const expensesSlice = createSlice({
         };
       })
       .addCase(updateExpense.pending, (state) => {
-        state.createPending = true;
+        state.expensesLoading = true;
       })
       .addCase(updateExpense.fulfilled, (state, action) => {
         state.expenses.push(action.payload);
-        state.createPending = false;
+        state.expensesLoading = false;
         state.alert = {
           show: true,
           type: 'success',
@@ -86,16 +106,19 @@ export const expensesSlice = createSlice({
         };
       })
       .addCase(updateExpense.rejected, (state, action) => {
-        state.createPending = false;
+        state.expensesLoading = false;
         state.alert = {
           show: true,
           type: 'error',
           message: `Failed to update expense: ${action?.payload}`,
         };
       })
+      .addCase(deleteExpense.pending, (state) => {
+        state.expensesLoading = true;
+      })
       .addCase(deleteExpense.fulfilled, (state, action) => {
         state.expenses.push(action.payload);
-        state.createPending = false;
+        state.expensesLoading = false;
         state.alert = {
           show: true,
           type: 'success',
@@ -103,7 +126,7 @@ export const expensesSlice = createSlice({
         };
       })
       .addCase(deleteExpense.rejected, (state, action) => {
-        state.createPending = false;
+        state.expensesLoading = false;
         state.alert = {
           show: true,
           type: 'error',
@@ -115,7 +138,7 @@ export const expensesSlice = createSlice({
 
 export const getExpenses = createAsyncThunk(
   'expenses/fetchAll',
-  async ({startDate, endDate}: getExpensesParams, { dispatch }) => {
+  async ({ startDate, endDate }: getExpensesParams, { dispatch }) => {
     try {
       const params: getExpensesParams = {};
       if (startDate) params.startDate = startDate;
@@ -205,7 +228,7 @@ export const deleteExpense = createAsyncThunk(
 );
 
 export const getChartData = createAsyncThunk(
-  'expenses/fetchAll',
+  'expenses/chartData',
   async (_, { dispatch }) => {
     try {
       const satistics = await axiosInstance.get('/expenses/stats/by-type');
