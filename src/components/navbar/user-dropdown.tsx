@@ -61,7 +61,7 @@ export const UserDropdown = () => {
         >
           Log Out
         </DropdownItem>
-        <DropdownItem key="switch">
+        <DropdownItem className="dark-mode-switch-drowdown" key="switch">
           <DarkModeSwitch />
         </DropdownItem>
       </DropdownMenu>
