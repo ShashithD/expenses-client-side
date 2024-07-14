@@ -134,14 +134,14 @@ export const Expenses = () => {
           <TableCell>
             <div className="flex items-center gap-4 ">
               <div>
-                <Tooltip content="Edit user" color="secondary">
+                <Tooltip content="Edit expense" color="secondary">
                   <button onClick={() => handleClickEditExpense(expense)}>
                     <EditIcon size={20} fill="#979797" />
                   </button>
                 </Tooltip>
               </div>
               <div>
-                <Tooltip content="Delete user" color="danger">
+                <Tooltip content="Delete expense" color="danger">
                   <button onClick={() => handleDeleteExpense(expense._id)}>
                     <DeleteIcon size={20} fill="#FF0080" />
                   </button>
