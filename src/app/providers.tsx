@@ -14,7 +14,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
       <NextUIProvider>
         {' '}
         <NextThemesProvider
-          defaultTheme="light"
+          defaultTheme="system"
           attribute="class"
           {...themeProps}
         >
