@@ -52,10 +52,27 @@ const PieChart = () => {
         { color: '#27AE60' }, // Dark Green
       ],
     },
+    middle: {
+      backgroundColor: '#D3D3D3',
+      textColor: '#404040',
+      slices: [
+        { color: '#4981CE' }, // Soft Blue
+        { color: '#2A9D8F' }, // Soft Green
+        { color: '#9C89B8' }, // Soft Purple
+        { color: '#F4A261' }, // Soft Orange
+        { color: '#E76F51' }, // Soft Red
+        { color: '#E9C46A' }, // Soft Yellow
+        { color: '#77B7D7' }, // Soft Light Blue
+      ],
+    },
   };
 
   const { backgroundColor, textColor, slices } =
-    theme === 'dark' ? colorScheme.dark : colorScheme.light;
+    theme === 'dark'
+      ? colorScheme.dark
+      : theme === 'light'
+      ? colorScheme.light
+      : colorScheme.middle;
 
   const options = {
     title: 'Expenses Analytics',
